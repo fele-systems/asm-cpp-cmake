@@ -1,3 +1,4 @@
+#include <cstdint>
 #include <iostream>
 
 extern "C" {
@@ -6,6 +7,14 @@ extern "C" {
     void settrue(bool*);
 
     uint32_t adc32(uint32_t,uint32_t,bool*);
+
+
+    bool add64_check_carry(uint64_t,uint64_t,uint64_t*);
+}
+
+bool add_check_carry(uint64_t x, uint64_t y, uint64_t& out)
+{
+    return add64_check_carry(x, y, &out);
 }
 
 int main() {
@@ -20,10 +29,14 @@ int main() {
 
     bool carry = false;
     auto s = adc32(0xFFFFFFFF, 100, &carry);
-    if (carry)
+
+
+    uint64_t result;
+
+    if (add_check_carry( UINT64_MAX, 1, result) )
     {
-        std::cout << "Has carry" << std::endl;
+        std::cout << "had carry" << std::endl;
     }
-    std::cout << "Result: " << s << std::endl;
-	return 0;
+
+    return 0;
 }
